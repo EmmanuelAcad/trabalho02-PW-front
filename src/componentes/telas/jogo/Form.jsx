@@ -1,133 +1,68 @@
 import { useContext } from "react";
 import Alerta from "../../comuns/Alerta";
 import JogoContext from "./JogoContext";
+import CampoEntrada from "../../comuns/CampoEntrada";
+import Dialogo from "../../comuns/Dialogo";
 
 function Form() {
 
-    const { objeto, handleChange, acaoCadastrar, alerta } =
+    const { objeto, handleChange, acaoCadastrar, alerta, listaProdutoras } =
         useContext(JogoContext);
 
-    (() => {
-        //'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-
     return (
-        <div className="modal fade" id="modalEdicao" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="exampleModalLabel">Jogo</h1>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="formulario" onSubmit={acaoCadastrar}
-                        className="needs-validation" noValidate>
-                        <div className="modal-body">
-                            <Alerta alerta={alerta} />
-                            <div class="mb-3">
-                                <label htmlFor="txtCodigo"
-                                    className="form-label">Código</label>
-                                <input className="form-control"
-                                    type="number"
-                                    id="txtCodigo"
-                                    name="codigo"
-                                    value={objeto.codigo}
-                                    onChange={handleChange}
-                                    readOnly />
-                            </div>
-                            <div class="mb-3">
-                                <label htmlFor="txtTitulo"
-                                    className="form-label">Titulo</label>
-                                <input className="form-control"
-                                    type="text"
-                                    id="txtTitulo"
-                                    name="titulo"
-                                    value={objeto.titulo}
-                                    onChange={handleChange}
-                                    required />
-                                <div class="valid-feedback">
-                                    Título OK
-                                </div>
-                                <div class="invalid-feedback">
-                                    O título deve ser informado
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label htmlFor="txtGenero"
-                                    className="form-label">Gênero</label>
-                                <input className="form-control"
-                                    type="text"
-                                    id="txtGenero"
-                                    name="genero"
-                                    value={objeto.genero}
-                                    onChange={handleChange}
-                                    required />
-                                <div class="valid-feedback">
-                                    Gênero OK
-                                </div>
-                                <div class="invalid-feedback">
-                                    O gênero deve ser informada
-                                </div>                                    
-                            </div>
-                            <div class="mb-3">
-                                <label htmlFor="txtPreco"
-                                    className="form-label">Preço</label>
-                                <input className="form-control"
-                                    type="number"
-                                    id="txtPreco"
-                                    name="preco"
-                                    value={objeto.preco}
-                                    onChange={handleChange}
-                                    required />
-                                <div class="valid-feedback">
-                                    Preço OK
-                                </div>
-                                <div class="invalid-feedback">
-                                    O preço deve ser informado
-                                </div>                                    
-                            </div>
-                            <div class="mb-3">
-                                <label htmlFor="txtProdutora"
-                                    className="form-label">Produtora</label>
-                                <input className="form-control"
-                                    type="number"
-                                    id="txtProdutora"
-                                    name="produtora"
-                                    value={objeto.produtora}
-                                    onChange={handleChange}
-                                    required />
-                                <div class="valid-feedback">
-                                    Produtora OK
-                                </div>
-                                <div class="invalid-feedback">
-                                    A produtora deve ser informada
-                                </div>                                    
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <button type="submit" className="btn btn-success" >
-                                Salvar  <i className="bi bi-save"></i>
-                            </button>
-                        </div>
-                    </form>
+        <Dialogo id="modalEdicao" titulo="Jogo"
+            acaoCadastrar={acaoCadastrar} idform="formulario">
+            <Alerta alerta={alerta} />
+            <CampoEntrada id="txtCodigo" label="Código"
+                tipo="number" name="codigo" value={objeto.codigo}
+                onchange={handleChange} requerido={false}
+                readonly={true} />
+            <CampoEntrada id="txtTitulo" label="Titulo"
+                tipo="text" name="titulo"
+                value={objeto.titulo}
+                onchange={handleChange} requerido={true}
+                readonly={false} maxlength={50}
+                msgvalido="Titulo OK"
+                msginvalido="Informe o titulo" />
+                <CampoEntrada id="txtGenero" label="Genero"
+                tipo="text" name="genero"
+                value={objeto.genero}
+                onchange={handleChange} requerido={true}
+                readonly={false} maxlength={50}
+                msgvalido="Genero OK"
+                msginvalido="Informe o genero" />
+                <CampoEntrada id="txtPreco" label="Preco"
+                tipo="number" name="preco" value={objeto.preco}
+                onchange={handleChange} requerido={true}
+                readonly={false} maxlength={10}
+                msgvalido="Preco OK"
+                msginvalido="Informe o preco" />
+            <div class="mb-3">
+                <label htmlFor="selectProdutora"
+                    className="form-label">Produtora</label>
+                <select className="form-control"
+                    required
+                    value={objeto.produtora}
+                    name="produtora" onChange={handleChange}>
+                    <option disabled="true" value="">
+                        Selecione a produtora
+                    </option>
+                    {
+                        listaProdutoras.map((produtora) => (
+                            <option key={produtora.codigo} value={produtora.codigo}>
+                                {produtora.nome}
+                            </option>
+                        ))
+                    }
+                </select>
+                <div class="valid-feedback">
+                    Produtora OK
+                </div>
+                <div class="invalid-feedback">
+                    Informe a produtora
                 </div>
             </div>
-        </div>
+        </Dialogo>
     )
 
 }

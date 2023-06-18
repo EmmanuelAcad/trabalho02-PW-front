@@ -2,32 +2,40 @@ import { useContext } from "react";
 import JogoContext from "./JogoContext";
 import Alerta from '../../comuns/Alerta'
 
-function Tabela() {
+function TabelaDlcs() {
 
-    const { alerta, setAlerta, listaObjetos, remover,
-        setEditar, setObjeto, recuperar, recuperarDlcs }
+    const { alerta, setAlerta, listaDlcs, removerDlc,
+        objeto, setEditarDlc, setDlc, recuperarDlc,
+        setExibirDlcs }
         = useContext(JogoContext);
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Jogos</h1>
+            <button className="btn btn-secondary" onClick={() => {
+                setExibirDlcs(false);
+                setAlerta({ status: "", message: "" });
+            }}>
+               Voltar <i className="bi bi-backspace"></i>
+            </button>
+            <h1>Dlcs do jogo : {objeto.titulo}</h1>
             <Alerta alerta={alerta} />
             <button type="button" className="btn btn-primary"
                 data-bs-toggle="modal"
-                data-bs-target="#modalEdicao"
+                data-bs-target="#modalEdicaoDlc"
                 onClick={() => {
-                    setEditar(false);
+                    setEditarDlc(false);
                     setAlerta({ status: "", message: "" });
-                    setObjeto({
-                        codigo: 0, titulo: "", genero: "", preco: "", produtora: ""
+                    setDlc({
+                        codigo: 0,
+                        titulo: "", descricao: "", preco: "",
+                        jogo: objeto.codigo
                     });
-
                 }}>
                 Novo
             </button>
-            {listaObjetos.length === 0 &&
-                <h1>Nenhum jogo encontrado</h1>}
-            {listaObjetos.length > 0 && (
+            {listaDlcs.length === 0 &&
+                <h1>Nenhuma dlc encontrada</h1>}
+            {listaDlcs.length > 0 && (
                 <div className="table-responsive">
                     <table className="table">
                         <thead>
@@ -35,43 +43,34 @@ function Tabela() {
                                 <th scope="col"
                                     style={{ textAlign: 'center' }}>Ações</th>
                                 <th scope="col">Código</th>
-                                <th scope="col">Título</th>
-                                <th scope="col">Gênero</th>
+                                <th scope="col">Titulo</th>
+                                <th scope="col">Descricao</th>
                                 <th scope="col">Preco</th>
-                                <th scope="col">Produtora</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {listaObjetos.map(objeto => (
-                                <tr key={objeto.codigo}>
+                            {listaDlcs.map(dlc => (
+                                <tr key={dlc.codigo}>
                                     <td align="center">
                                         <button className="btn btn-info" title="Editar"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#modalEdicao"
+                                            data-bs-target="#modalEdicaoDlc"
                                             onClick={() => {
-                                                recuperar(objeto.codigo);
-                                                setEditar(true);
+                                                recuperarDlc(dlc.codigo);
+                                                setEditarDlc(true);
                                                 setAlerta({ status: "", message: "" });
                                             }}>
                                             <i className="bi bi-pencil-square"></i>
                                         </button>
                                         <button className="btn btn-danger" title="Remover"
-                                            onClick={() => remover(objeto)}>
+                                            onClick={() => removerDlc(dlc)}>
                                             <i className="bi bi-trash"></i>
                                         </button>
-                                        <button className="btn btn-success" title="Dlcs"
-                                            onClick={() => {
-                                                recuperarDlcs(objeto.codigo);
-                                                setAlerta({ status: "", message: "" });
-                                            }}>
-                                            <i className="bi bi-pc-display"></i>
-                                        </button>  
                                     </td>
-                                    <th scope="row">{objeto.codigo}</th>
-                                    <td>{objeto.titulo}</td>
-                                    <td>{objeto.genero}</td>
-                                    <td>{objeto.preco}</td>
-                                    <td>{objeto.produtora}</td>
+                                    <th scope="row">{dlc.codigo}</th>
+                                    <td>{dlc.titulo}</td>
+                                    <td>{dlc.descricao}</td>
+                                    <td>{dlc.preco}</td>
                                 </tr>
                             ))}
 
@@ -85,4 +84,4 @@ function Tabela() {
 
 }
 
-export default Tabela;
+export default TabelaDlcs;
